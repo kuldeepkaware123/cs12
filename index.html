@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Shiksha Full Stack</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        li { margin: 10px 0; background: #f0f0f0; padding: 10px; display: flex; justify-content: space-between; width: 300px;}
+        button { cursor: pointer; margin-left: 5px; }
+        .del-btn { background: #ff4d4d; color: white; border: none; padding: 5px; }
+        .edit-btn { background: #4caf50; color: white; border: none; padding: 5px; }
+    </style>
+</head>
+<body>
+
+    <h1>Class Register (CRUD App)</h1>
+
+    <div>
+        <input type="text" id="stuName" placeholder="Enter Name">
+        <button onclick="addStudent()">Add Student</button>
+    </div>
+
+    <hr>
+
+    <button onclick="getstudent()">Refresh List</button>
+    <ul id="list"></ul>
+
+    <script>
+        
+        // === 1. GET API (Data Lana) ===
+        async function getstudent(){
+            let res = await fetch("http://localhost:5000/getstudent"); // Backend route check karlena
+            let data = await res.json();
+            
+            let list = "";
+            
+            data.forEach(element => {
+                // IMPORTANT: Hum ID ko button ke andar chupa kar bhejenge
+                // onclick="deleteStudent('ID_YAHAN_HAI')"
+                list += `
+                    <li> 
+                        <span>${element.name}</span>
+                        <div>
+                            <button class="edit-btn" onclick="updateStudent('${element._id}')">Edit</button>
+                            <button class="del-btn" onclick="deleteStudent('${element._id}')">Delete</button>
+                        </div>
+                    </li>
+                `; 
+            });
+            document.querySelector("#list").innerHTML = list; 
+        }
+
+        // === 2. POST API (Data Bhejna) ===
+        async function addStudent() {
+            const name = document.querySelector("#stuName").value;
+            
+            await fetch("http://localhost:5000/addstudent", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: name })
+            });
+
+            // Add hone ke baad list turant refresh karo
+            getstudent(); 
+            document.querySelector("#stuName").value = ""; // Input khali karo
+        }
+
+        // === 3. DELETE API (Data Udana) ===
+        async function deleteStudent(id) {
+            // Hum function me 'id' receive kar rahe hain jo button click par aayi thi
+            if(confirm("Pakka delete karna hai?")) {
+                await fetch(`http://localhost:5000/deletestu/${id}`, {
+                    method: "DELETE"
+                });
+                getstudent(); // List refresh
+            }
+        }
+
+        // === 4. UPDATE API (Data Badalan) ===
+        async function updateStudent(id) {
+            // Simple tareeka: Prompt box se naya naam mango
+            const newName = prompt("Enter new name:");
+            
+            if(newName) {
+                await fetch(`http://localhost:5000/updatestu/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name: newName })
+                });
+                getstudent(); // List refresh
+            }
+        }
+
+        // Page load hote hi list dikhao
+        getstudent();
+
+    </script>
+</body>
+</html>

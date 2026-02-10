@@ -1,0 +1,63 @@
+backend
+npm init -y
+npm i express
+index.js
+npm i nodemon -g
+nodemon index.js
+---------------------
+    index.js
+         import express
+         use express
+
+         app.use(express.json())
+         
+         ------------
+         
+//CRUD
+// create -> post
+// read -> get
+// update -> put
+// delete -> delete
+
+
+system: mongodb download
+        mongodb compass
+
+        npm i mongoose
+
+        import 
+
+        connect
+        .then
+        .catch err
+        schema {syntex}
+        model {folder} phla word capital
+
+
+         app.post("/addcourse",(req,res)=>{
+            let newcourse = new model({name:req})
+            newcourse.save()
+            res.send(newcourse)
+         })
+
+         app.get("/getcourse  async)
+         // let course = await model.find()
+         res.send(course)
+
+         app.put("/updatecourse/:id", async(req,res)=>{
+            let id = req.params.id
+            let newname = req.body.name
+
+            let updatecourse = await model.findByIdAndUpdate(id,{name:newname})
+            res.send("course name updated")
+         })
+
+         app.delete("/delete/:id" aysnc(req,res)=>{
+            let id = req.params.id
+            let coursedelete = await model.findByIdAndDelete(id)
+            res.send("course deleted")
+         })
+
+         app.listen(3000,()=>{
+            log
+         })
