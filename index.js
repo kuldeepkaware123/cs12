@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dns = require("dns");
+const path = require("path");
 
 const app = express();
 const PORT = 5000;
@@ -9,6 +10,7 @@ const MONGODB_URI ="mongodb+srv://kuldeepkaware77_db_user:AJlP1LvAmCYrakRM@clust
 
 app.use(express.json());
 app.use(cors());
+app.use(express.static(__dirname));
 
 async function connectToDatabaseWithDnsFallback() {
   try {
@@ -108,7 +110,7 @@ app.delete("/delete/:id", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Digital Dukan backend is running. Use /home or API endpoints.");
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.get("/home", (req, res) => {
